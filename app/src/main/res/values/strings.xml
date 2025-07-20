@@ -1,3 +1,39 @@
 <resources>
-    <string name="app_name">Menfin</string>
+    <string name="app_name">MenFin App</string>
+
+    <!-- Validations messages -->
+    <string name="error_field_required">O campo é obrigatório</string>
+    <string name="error_password_complexity">A senha precisa ter números e letras</string>
+    <string name="error_min_length">O campo deve ter no mínimo 8 caracteres</string>
+    <string name="error_invalid_email">Email inválido</string>
+    <string name="error_letters_only">O usuário só pode conter letras</string>
+    <string name="register_error_user_already_exists">Já existe um cadastro com o usuário informado</string>
+
+    <!-- Drawer -->
+    <!-- WIP -->
+
+    <!-- Generic -->
+    <string name="generic_to_cancel">Cancelar</string>
+    <string name="generic_open_menu">Abrir menu</string>
+    <string name="generic_filter">Filtro</string>
+    <string name="generic_filters">Filtros</string>
+    <string name="generic_to_back">Voltar</string>
+    <string name="generic_to_leave">Sair</string>
+    <string name="generic_welcome">Bem-vindo</string>
+    <string name="generic_to_clear">Limpar</string>
+    <string name="generic_email">Email</string>
+    <string name="generic_password">Senha</string>
+    <string name="generic_ok">OK</string>
+
+    <!-- Welcome card -->
+    <string name="welcome_card_make_register_description">Por favor, faça o seu cadastro</string>
+
+    <!-- User's register -->
+    <string name="generic_to_register">Registrar</string>
+    <string name="register_section_general_data">Dados gerais</string>
+    <string name="register_field_name">Nome</string>
+    <string name="register_field_email">Email</string>
+    <string name="register_section_auth">Dados de autenticação</string>
+    <string name="register_field_password">Senha</string>
+
 </resources>
