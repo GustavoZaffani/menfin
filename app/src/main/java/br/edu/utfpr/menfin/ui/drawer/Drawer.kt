@@ -45,7 +45,7 @@ fun Drawer(
     drawerState: DrawerState,
     currentRoute: String,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    viewModel: DrawerViewModel = viewModel(),
+    viewModel: DrawerViewModel = viewModel(factory = DrawerViewModel.Factory),
     onLogoutSuccess: () -> Unit,
     content: @Composable () -> Unit
 ) {

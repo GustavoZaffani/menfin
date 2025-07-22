@@ -50,7 +50,6 @@ data class RegisterUiState(
 
 class RegisterViewModel(private val userDao: UserDao) : ViewModel() {
 
-    private val tag: String = "RegisterViewModel"
     var uiState: RegisterUiState by mutableStateOf(RegisterUiState())
 
     fun save() {
