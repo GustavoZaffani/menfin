@@ -27,7 +27,7 @@ class SplashViewModel : ViewModel() {
 
             uiState = uiState.copy(
                 visible = false,
-                userLogged = true
+                userLogged = false
             )
         }
     }
