@@ -72,7 +72,6 @@ class RegisterViewModel(private val userDao: UserDao) : ViewModel() {
             )
 
             userDao.saveUser(userModel)
-            userDao.saveUser(userModel)
 
             uiState = uiState.copy(
                 isSaving = false,

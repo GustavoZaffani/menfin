@@ -18,6 +18,16 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
         const val USER_EMAIL = "email"
         const val USER_USER = "user"
         const val USER_PASSWORD = "password"
+
+        // Onboarding table
+        const val TABLE_ONBOARDING = "onboarding"
+        const val ONBOARDING_USER_ID = "user_id"
+        const val ONBOARDING_REMUNERATION = "remuneration"
+        const val ONBOARDING_IS_NEGATIVE = "is_negative"
+        const val ONBOARDING_HAS_DEPENDENTS = "has_dependents"
+        const val ONBOARDING_KNOWLEDGE_LEVEL = "knowledge_level"
+        const val ONBOARDING_MAIN_GOAL = "main_goal"
+        const val ONBOARDING_IS_READY = "is_ready"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -30,10 +40,24 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
                     " $USER_USER TEXT," +
                     " $USER_PASSWORD TEXT)"
         )
+
+        db?.execSQL(
+            "CREATE TABLE IF NOT EXISTS $TABLE_ONBOARDING ( " +
+                    " $ID_KEY INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    " $ONBOARDING_USER_ID INTEGER," +
+                    " $ONBOARDING_REMUNERATION REAL," +
+                    " $ONBOARDING_IS_NEGATIVE TEXT," +
+                    " $ONBOARDING_HAS_DEPENDENTS TEXT," +
+                    " $ONBOARDING_KNOWLEDGE_LEVEL TEXT," +
+                    " $ONBOARDING_MAIN_GOAL TEXT," +
+                    " $ONBOARDING_IS_READY TEXT," +
+                    " FOREIGN KEY ($ONBOARDING_USER_ID) REFERENCES $TABLE_USER($ID_KEY))"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
         db?.execSQL("DROP TABLE $TABLE_USER")
+        db?.execSQL("DROP TABLE $TABLE_ONBOARDING")
         onCreate(db)
     }
 }
