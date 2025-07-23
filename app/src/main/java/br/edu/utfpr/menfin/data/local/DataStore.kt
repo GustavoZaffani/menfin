@@ -19,7 +19,7 @@ class DataStore(private val context: Context) {
         val USER_LOGGED_KEY = stringPreferencesKey("user_logged")
     }
 
-    suspend fun saveUserName(user: UserLogged) {
+    suspend fun saveUserLogged(user: UserLogged) {
         context.dataStore.edit { settings ->
             val jsonString = Json.encodeToString(user)
             settings[USER_LOGGED_KEY] = jsonString

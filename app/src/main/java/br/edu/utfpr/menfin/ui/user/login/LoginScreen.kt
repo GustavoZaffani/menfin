@@ -34,11 +34,11 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory),
     onClickNewRegister: () -> Unit,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: (Boolean) -> Unit
 ) {
     LaunchedEffect(viewModel.uiState.loginSuccess) {
         if (viewModel.uiState.loginSuccess) {
-            onLoginSuccess()
+            onLoginSuccess(viewModel.uiState.onboardingIsDone)
         }
     }
 

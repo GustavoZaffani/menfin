@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.utfpr.menfin.R
+import br.edu.utfpr.menfin.data.dao.OnboardingDao
 import br.edu.utfpr.menfin.data.dao.UserDao
 import br.edu.utfpr.menfin.data.local.DataStore
 import br.edu.utfpr.menfin.data.local.UserLogged
@@ -34,11 +35,16 @@ data class FormState(
 data class LoginRegisterUiState(
     val formState: FormState = FormState(),
     val isProcessing: Boolean = false,
-    val loginSuccess: Boolean = false
+    val loginSuccess: Boolean = false,
+    val onboardingIsDone: Boolean = false,
 )
 
 
-class LoginViewModel(private val dataStore: DataStore, private val userDao: UserDao) : ViewModel() {
+class LoginViewModel(
+    private val dataStore: DataStore,
+    private val userDao: UserDao,
+    private val onboardingDao: OnboardingDao
+) : ViewModel() {
 
     var uiState: LoginRegisterUiState by mutableStateOf(LoginRegisterUiState())
 
@@ -73,10 +79,13 @@ class LoginViewModel(private val dataStore: DataStore, private val userDao: User
                         )
                     )
                 } else {
-                    dataStore.saveUserName(UserLogged(user._id!!, user.name, user.user))
+                    dataStore.saveUserLogged(
+                        UserLogged(user._id!!, user.name, user.user))
+                    val onboardingIsDone = onboardingDao.findByUser(user._id) != null
                     uiState = uiState.copy(
                         isProcessing = false,
-                        loginSuccess = true
+                        loginSuccess = true,
+                        onboardingIsDone = onboardingIsDone
                     )
                 }
             }
@@ -141,7 +150,8 @@ class LoginViewModel(private val dataStore: DataStore, private val userDao: User
 
                 LoginViewModel(
                     dataStore = DataStore(context = application!!),
-                    userDao = UserDao(ctx = application)
+                    userDao = UserDao(ctx = application),
+                    onboardingDao = OnboardingDao(ctx = application)
                 )
             }
         }

@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.edu.utfpr.menfin.ui.drawer.Drawer
 import br.edu.utfpr.menfin.ui.home.HomeScreen
+import br.edu.utfpr.menfin.ui.onboarding.OnboardingScreen
 import br.edu.utfpr.menfin.ui.splash.SplashScreen
 import br.edu.utfpr.menfin.ui.user.login.LoginScreen
 import br.edu.utfpr.menfin.ui.user.register.RegisterScreen
@@ -26,6 +27,7 @@ object Screens {
     const val REGISTER = "register"
     const val LOGIN = "login"
     const val HOME = "home"
+    const val ONBOARDING = "onboarding"
 }
 
 object Routes {
@@ -33,6 +35,7 @@ object Routes {
     const val REGISTER = Screens.REGISTER
     const val LOGIN = Screens.LOGIN
     const val HOME = Screens.HOME
+    const val ONBOARDING = Screens.ONBOARDING
 }
 
 @Composable
@@ -67,9 +70,16 @@ fun MenFinApp(
         composable(route = Routes.LOGIN) {
             LoginScreen(
                 onClickNewRegister = { navController.navigate(Routes.REGISTER) },
-                onLoginSuccess = {
-                    navigateTo(navController, Routes.HOME)
+                onLoginSuccess = { onboardingIsDone ->
+                    val destination = if (onboardingIsDone) Routes.HOME else Routes.ONBOARDING
+                    navigateTo(navController, destination)
                 }
+            )
+        }
+
+        composable(route = Routes.ONBOARDING) {
+            OnboardingScreen (
+                onOnboardingFinished = { navigateTo(navController, Routes.HOME) },
             )
         }
 

@@ -25,6 +25,7 @@
     <string name="generic_password">Senha</string>
     <string name="generic_ok">OK</string>
     <string name="generic_to_enter">Entrar</string>
+    <string name="generic_money">Dinheiro</string>
 
     <!-- Welcome card -->
     <string name="welcome_card_make_register_description">Por favor, faça o seu cadastro</string>
