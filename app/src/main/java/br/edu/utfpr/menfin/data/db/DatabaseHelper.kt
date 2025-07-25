@@ -28,6 +28,15 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
         const val ONBOARDING_KNOWLEDGE_LEVEL = "knowledge_level"
         const val ONBOARDING_MAIN_GOAL = "main_goal"
         const val ONBOARDING_IS_READY = "is_ready"
+
+        // Transaction table
+        const val TABLE_TRANSACTION = "transaction_entry"
+        const val TRANSACTION_TYPE = "type"
+        const val TRANSACTION_VALUE = "value"
+        const val TRANSACTION_DESCRIPTION = "description"
+        const val TRANSACTION_CATEGORY = "category"
+        const val TRANSACTION_DATE = "competence_date"
+        const val TRANSACTION_USER_ID = "user_id"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -53,11 +62,24 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
                     " $ONBOARDING_IS_READY TEXT," +
                     " FOREIGN KEY ($ONBOARDING_USER_ID) REFERENCES $TABLE_USER($ID_KEY))"
         )
+
+        db?.execSQL(
+            "CREATE TABLE IF NOT EXISTS $TABLE_TRANSACTION ( " +
+                    " $ID_KEY INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    " $TRANSACTION_TYPE TEXT," +
+                    " $TRANSACTION_VALUE REAL," +
+                    " $TRANSACTION_DESCRIPTION TEXT," +
+                    " $TRANSACTION_CATEGORY TEXT," +
+                    " $TRANSACTION_DATE INTEGER," +
+                    " $TRANSACTION_USER_ID INTEGER," +
+                    " FOREIGN KEY ($TRANSACTION_USER_ID) REFERENCES $TABLE_USER($ID_KEY))"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
         db?.execSQL("DROP TABLE $TABLE_USER")
         db?.execSQL("DROP TABLE $TABLE_ONBOARDING")
+        db?.execSQL("DROP TABLE $TABLE_TRANSACTION")
         onCreate(db)
     }
 }

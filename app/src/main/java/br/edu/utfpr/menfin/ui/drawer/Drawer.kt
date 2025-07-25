@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
+import androidx.compose.material.icons.automirrored.outlined.Segment
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerState
@@ -29,11 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.edu.utfpr.menfin.R
 import br.edu.utfpr.menfin.ui.Routes
 import br.edu.utfpr.menfin.ui.theme.MenfinTheme
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +50,7 @@ fun Drawer(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     viewModel: DrawerViewModel = viewModel(factory = DrawerViewModel.Factory),
     onLogoutSuccess: () -> Unit,
+    onTransactionPressed: () -> Unit,
     content: @Composable () -> Unit
 ) {
     LaunchedEffect(viewModel.uiState.logoutSuccess) {
@@ -65,6 +69,7 @@ fun Drawer(
                     modifier = Modifier.width(drawerWidth),
                     userLogged = viewModel.uiState.userLogged,
                     currentRoute = currentRoute,
+                    onTransactionPressed = onTransactionPressed,
                     closeDrawer = { coroutineScope.launch { drawerState.close() } },
                     onLogout = viewModel::logout
                 )
@@ -80,6 +85,7 @@ private fun DrawerSheet(
     modifier: Modifier = Modifier,
     currentRoute: String,
     userLogged: String,
+    onTransactionPressed: () -> Unit,
     closeDrawer: () -> Unit,
     onLogout: () -> Unit
 ) {
@@ -90,6 +96,16 @@ private fun DrawerSheet(
                 onLogout = {
                     closeDrawer()
                     onLogout()
+                }
+            )
+
+            DrawerItem(
+                imageVector = Icons.AutoMirrored.Outlined.Segment,
+                label = stringResource(R.string.drawer_menu_transaction),
+                isSelected = currentRoute == Routes.TRANSACTION_LIST,
+                onClick = {
+                    closeDrawer()
+                    onTransactionPressed()
                 }
             )
         }
@@ -137,6 +153,7 @@ fun DrawerPreview() {
             currentRoute = Routes.SPLASH,
             userLogged = "CR7",
             closeDrawer = {},
+            onTransactionPressed = {},
             onLogout = {}
         )
     }
@@ -167,7 +184,7 @@ fun HeaderDrawer(
             IconButton(onClick = onLogout) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.Logout,
-                    contentDescription = "Sair",
+                    contentDescription = stringResource(R.string.generic_to_leave),
                     tint = Color.White,
                     modifier = Modifier
                         .size(48.dp)
