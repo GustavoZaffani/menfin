@@ -9,14 +9,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import br.edu.utfpr.menfin.ui.drawer.Drawer
 import br.edu.utfpr.menfin.ui.home.HomeScreen
 import br.edu.utfpr.menfin.ui.onboarding.OnboardingScreen
 import br.edu.utfpr.menfin.ui.splash.SplashScreen
+import br.edu.utfpr.menfin.ui.transaction.form.TransactionFormScreen
+import br.edu.utfpr.menfin.ui.transaction.list.TransactionListScreen
 import br.edu.utfpr.menfin.ui.user.login.LoginScreen
 import br.edu.utfpr.menfin.ui.user.register.RegisterScreen
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +32,12 @@ object Screens {
     const val LOGIN = "login"
     const val HOME = "home"
     const val ONBOARDING = "onboarding"
+    const val TRANSACTION = "transactions"
+    const val TRANSACTION_FORM = "transactionsForm"
+}
+
+object Arguments {
+    const val TRANSACTION_ID = "transactionId"
 }
 
 object Routes {
@@ -36,6 +46,9 @@ object Routes {
     const val LOGIN = Screens.LOGIN
     const val HOME = Screens.HOME
     const val ONBOARDING = Screens.ONBOARDING
+    const val TRANSACTION_LIST = Screens.TRANSACTION
+    const val TRANSACTION_FORM =
+        "${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}={${Arguments.TRANSACTION_ID}}"
 }
 
 @Composable
@@ -78,7 +91,7 @@ fun MenFinApp(
         }
 
         composable(route = Routes.ONBOARDING) {
-            OnboardingScreen (
+            OnboardingScreen(
                 onOnboardingFinished = { navigateTo(navController, Routes.HOME) },
             )
         }
@@ -94,6 +107,34 @@ fun MenFinApp(
                 )
             }
         }
+
+        composable(route = Routes.TRANSACTION_LIST) {
+            DefaultDrawer(
+                drawerState = drawerState,
+                currentRoute = currentRoute,
+                navController = navController
+            ) {
+                TransactionListScreen(
+                    onNavigateToForm = { navController.navigate(Screens.TRANSACTION_FORM) },
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
+                    onTransactionPressed = { transaction ->
+                        navController.navigate("${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}=${transaction._id}")
+                    }
+                )
+            }
+        }
+
+        composable(
+            route = Routes.TRANSACTION_FORM,
+            arguments = listOf(
+                navArgument(name = "id") { type = NavType.StringType; nullable = true }
+            )
+        ) {
+            TransactionFormScreen(
+                onTransactionSaved = { navigateTo(navController, Routes.TRANSACTION_LIST) },
+                onBackPressed = { navController.popBackStack() },
+            )
+        }
     }
 }
 
@@ -107,7 +148,8 @@ fun DefaultDrawer(
     Drawer(
         drawerState = drawerState,
         currentRoute = currentRoute,
-        onLogoutSuccess = { navigateTo(navController, Routes.LOGIN) }
+        onLogoutSuccess = { navigateTo(navController, Routes.LOGIN) },
+        onTransactionPressed = { navigateTo(navController, Routes.TRANSACTION_LIST) },
     ) {
         content()
     }

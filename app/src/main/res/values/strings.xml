@@ -8,9 +8,11 @@
     <string name="error_invalid_email">Email inválido</string>
     <string name="error_letters_only">O usuário só pode conter letras</string>
     <string name="register_error_user_already_exists">Já existe um cadastro com o usuário informado</string>
+    <string name="error_invalid_monetary_value">O valor deve ser um número válido</string>
+    <string name="error_invalid_monetary_min_value">O valor deve ser maior ou igual a R$ 0,01.</string>
 
     <!-- Drawer -->
-    <!-- WIP -->
+    <string name="drawer_menu_transaction">Lançamentos</string>
 
     <!-- Generic -->
     <string name="generic_to_cancel">Cancelar</string>
@@ -26,6 +28,13 @@
     <string name="generic_ok">OK</string>
     <string name="generic_to_enter">Entrar</string>
     <string name="generic_money">Dinheiro</string>
+    <string name="generic_to_save">Salvar</string>
+    <string name="generic_to_update">Atualizar</string>
+    <string name="generic_to_confirm">Confirmar</string>
+
+    <!-- Empty list -->
+    <string name="empty_list_content_description_icon">ícone</string>
+    <string name="empty_list_no_register_found">Nenhum registro encontrado</string>
 
     <!-- Welcome card -->
     <string name="welcome_card_make_register_description">Por favor, faça o seu cadastro</string>
@@ -46,5 +55,17 @@
     <string name="login_new_register_action">Crie uma agora</string>
     <string name="login_user_not_found">Usuário não encontrado</string>
     <string name="login_password_is_invalid">Senha incorreta</string>
+
+    <!-- Transaction List  -->
+    <string name="transaction_list_transaction_excluded_with_success">Lançamento excluído com sucesso!</string>
+    <string name="transaction_list_delete_title_message">Tem certeza que deseja excluir este lançamento?</string>
+    <string name="transaction_list_delete_description_message">A ação não poderá ser desfeita.</string>
+    <string name="transaction_list_add_transaction_button">Adicionar Lançamento</string>
+    <string name="transaction_list_empty_list_message">Nenhum lançamento encontrado.</string>
+    <string name="transaction_list_app_bar_title">Lançamentos</string>
+
+
+
+
 
 </resources>
