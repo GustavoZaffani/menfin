@@ -37,6 +37,13 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
         const val TRANSACTION_CATEGORY = "category"
         const val TRANSACTION_DATE = "competence_date"
         const val TRANSACTION_USER_ID = "user_id"
+
+        // Chat History table
+        const val TABLE_CHAT_HISTORY = "chat_history"
+        const val CHAT_HISTORY_USER_ID = "user_id"
+        const val CHAT_HISTORY_MESSAGE = "message"
+        const val CHAT_HISTORY_SENDER = "sender"
+        const val CHAT_HISTORY_TIMESTAMP = "created_at"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -74,12 +81,23 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
                     " $TRANSACTION_USER_ID INTEGER," +
                     " FOREIGN KEY ($TRANSACTION_USER_ID) REFERENCES $TABLE_USER($ID_KEY))"
         )
+
+        db?.execSQL(
+            "CREATE TABLE IF NOT EXISTS $TABLE_CHAT_HISTORY ( " +
+                    " $ID_KEY INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    " $CHAT_HISTORY_USER_ID INTEGER," +
+                    " $CHAT_HISTORY_MESSAGE TEXT," +
+                    " $CHAT_HISTORY_SENDER TEXT," +
+                    " $CHAT_HISTORY_TIMESTAMP INTEGER," +
+                    " FOREIGN KEY ($CHAT_HISTORY_USER_ID) REFERENCES $TABLE_USER($ID_KEY))"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
         db?.execSQL("DROP TABLE $TABLE_USER")
         db?.execSQL("DROP TABLE $TABLE_ONBOARDING")
         db?.execSQL("DROP TABLE $TABLE_TRANSACTION")
+        db?.execSQL("DROP TABLE $TABLE_CHAT_HISTORY")
         onCreate(db)
     }
 }

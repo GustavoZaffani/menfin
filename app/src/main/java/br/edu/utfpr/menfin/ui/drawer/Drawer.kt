@@ -115,7 +115,7 @@ private fun DrawerSheet(
 
             DrawerItem(
                 imageVector = Icons.Default.AutoAwesome,
-                label = "MenFin",
+                label = stringResource(R.string.app_name),
                 isSelected = currentRoute == Routes.MENTOR,
                 onClick = {
                     closeDrawer()
@@ -159,9 +159,9 @@ private fun DrawerItem(
     )
 }
 
-@Preview(showBackground = true, heightDp = 400)
+@Preview(showBackground = true)
 @Composable
-fun DrawerPreview() {
+private fun DrawerPreview() {
     MenfinTheme {
         DrawerSheet(
             currentRoute = Routes.SPLASH,
@@ -175,7 +175,7 @@ fun DrawerPreview() {
 }
 
 @Composable
-fun HeaderDrawer(
+private fun HeaderDrawer(
     modifier: Modifier = Modifier,
     user: String,
     onLogout: () -> Unit
@@ -221,7 +221,7 @@ fun HeaderDrawer(
 
 @Preview(showBackground = true)
 @Composable
-fun HeaderDrawerPreview() {
+private fun HeaderDrawerPreview() {
     MenfinTheme {
         HeaderDrawer(
             user = "MenFin",

@@ -10,3 +10,8 @@ fun Long.toBrazilianDateFormat(): String {
     format.timeZone = TimeZone.getTimeZone("UTC")
     return format.format(Date(this))
 }
+
+fun Long.formatTimestamp(): String {
+    val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return sdf.format(Date(this))
+}

@@ -111,9 +111,10 @@ class TransactionFormViewModel(
             uiState = uiState.copy(
                 generalErrorMessage = "Já existe um lançamento com os mesmos dados."
             )
+            return false
         }
 
-        return existingTransaction == null
+        return true
     }
 
     fun saveTransaction() {

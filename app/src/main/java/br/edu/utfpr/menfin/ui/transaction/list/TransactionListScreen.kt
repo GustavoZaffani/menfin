@@ -1,15 +1,34 @@
 package br.edu.utfpr.menfin.ui.transaction.list
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Fastfood
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocalActivity
+import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,7 +39,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,10 +56,10 @@ import br.edu.utfpr.menfin.data.model.TransactionType
 import br.edu.utfpr.menfin.extensions.toBrazilianDateFormat
 import br.edu.utfpr.menfin.ui.onboarding.AppPrimaryColor
 import br.edu.utfpr.menfin.ui.shared.components.AppBar
-import br.edu.utfpr.menfin.ui.shared.components.CardList
 import br.edu.utfpr.menfin.ui.shared.components.ConfirmationDialog
 import br.edu.utfpr.menfin.ui.shared.components.EmptyList
 import br.edu.utfpr.menfin.ui.shared.components.Loading
+import br.edu.utfpr.menfin.ui.shared.components.TransactionList
 import br.edu.utfpr.menfin.ui.theme.MenfinTheme
 import java.text.NumberFormat
 import java.util.Locale
@@ -117,60 +138,105 @@ fun TransactionListScreen(
 }
 
 @Composable
-fun TransactionContent(
+private fun TransactionContent(
     modifier: Modifier = Modifier,
     transactions: List<TransactionModel>,
     onTransactionPressed: (TransactionModel) -> Unit,
     onTransactionLongPressed: (TransactionModel) -> Unit
 ) {
-    CardList(
+    TransactionList(
         modifier = modifier,
         items = transactions,
         onItemPressed = onTransactionPressed,
         onLongItemPressed = onTransactionLongPressed,
     ) { transaction ->
-        val valueColor =
-            if (transaction.type == TransactionType.REVENUE.name) Color(0xFF16A34A) else Color(
-                0xFFDC2626
-            )
-        val formattedValue =
-            NumberFormat.getCurrencyInstance(Locale("pt", "BR")).format(transaction.value)
+        TransactionListItem(transaction = transaction)
+    }
+}
+
+@Composable
+private fun TransactionListItem(transaction: TransactionModel) {
+
+    val typeColor =
+        if (transaction.type == TransactionType.REVENUE.name) Color(0xFF16A34A) else Color(
+            0xFFDC2626
+        )
+    val formattedValue =
+        NumberFormat.getCurrencyInstance(Locale("pt", "BR")).format(transaction.value)
+    val category = TransactionCategory.valueOf(transaction.category)
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = BorderStroke(1.dp, Color(0xFFF0F2F5))
+    ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .width(6.dp)
+                    .fillMaxHeight()
+                    .background(typeColor)
+            )
+
+            Box(
+                modifier = Modifier
+                    .padding(12.dp)
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(typeColor.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = category.getIcon(),
+                    contentDescription = category.label,
+                    tint = typeColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 12.dp)
+            ) {
                 Text(
                     text = transaction.description,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
-                Row {
-                    Text(
-                        text = transaction.date.toBrazilianDateFormat(),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
-                    )
-                    Text(
-                        text = " | ",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
-                    )
-                    Text(
-                        text = TransactionCategory.valueOf(transaction.category).label,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
-                    )
-                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "${transaction.date.toBrazilianDateFormat()} | ${category.label}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
             }
+
             Text(
                 text = formattedValue,
-                color = valueColor,
+                color = typeColor,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.padding(end = 16.dp)
             )
         }
+    }
+}
+
+fun TransactionCategory.getIcon(): ImageVector {
+    return when (this) {
+        TransactionCategory.FOOD -> Icons.Default.Fastfood
+        TransactionCategory.TRANSPORT -> Icons.Default.DirectionsCar
+        TransactionCategory.HOUSING -> Icons.Default.Home
+        TransactionCategory.LEISURE -> Icons.Default.LocalActivity
+        TransactionCategory.HEALTH -> Icons.Default.MedicalServices
+        TransactionCategory.SALARY -> Icons.Default.AttachMoney
+        TransactionCategory.OTHER -> Icons.Default.MoreHoriz
     }
 }
 
@@ -238,7 +304,7 @@ private fun TransactionAppBar(
 
 @Preview(showBackground = true)
 @Composable
-fun TransactionListScreenPreview() {
+private fun TransactionListScreenPreview() {
     MenfinTheme {
         TransactionListScreen(
             onNavigateToForm = {},
