@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.edu.utfpr.menfin.ui.drawer.Drawer
 import br.edu.utfpr.menfin.ui.home.HomeScreen
+import br.edu.utfpr.menfin.ui.mentor.hub.MentorHubScreen
 import br.edu.utfpr.menfin.ui.onboarding.OnboardingScreen
 import br.edu.utfpr.menfin.ui.splash.SplashScreen
 import br.edu.utfpr.menfin.ui.transaction.form.TransactionFormScreen
@@ -34,6 +35,7 @@ object Screens {
     const val ONBOARDING = "onboarding"
     const val TRANSACTION = "transactions"
     const val TRANSACTION_FORM = "transactionsForm"
+    const val MENTOR = "mentor"
 }
 
 object Arguments {
@@ -49,6 +51,7 @@ object Routes {
     const val TRANSACTION_LIST = Screens.TRANSACTION
     const val TRANSACTION_FORM =
         "${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}={${Arguments.TRANSACTION_ID}}"
+    const val MENTOR = Screens.MENTOR
 }
 
 @Composable
@@ -135,6 +138,18 @@ fun MenFinApp(
                 onBackPressed = { navController.popBackStack() },
             )
         }
+
+        composable(route = Routes.MENTOR) {
+            DefaultDrawer(
+                drawerState = drawerState,
+                currentRoute = currentRoute,
+                navController = navController
+            ) {
+               MentorHubScreen(
+                   openDrawer = { coroutineScope.launch { drawerState.open() } }
+               ) { }
+            }
+        }
     }
 }
 
@@ -150,6 +165,7 @@ fun DefaultDrawer(
         currentRoute = currentRoute,
         onLogoutSuccess = { navigateTo(navController, Routes.LOGIN) },
         onTransactionPressed = { navigateTo(navController, Routes.TRANSACTION_LIST) },
+        onMentorPressed = { navigateTo(navController, Routes.MENTOR) },
     ) {
         content()
     }
