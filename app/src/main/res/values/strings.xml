@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MenFin App</string>
+    <string name="app_name">MenFin</string>
 
     <!-- Validations messages -->
     <string name="error_field_required">O campo é obrigatório</string>
@@ -31,6 +31,7 @@
     <string name="generic_to_save">Salvar</string>
     <string name="generic_to_update">Atualizar</string>
     <string name="generic_to_confirm">Confirmar</string>
+    <string name="generic_you">Você</string>
 
     <!-- Empty list -->
     <string name="empty_list_content_description_icon">ícone</string>
@@ -64,8 +65,27 @@
     <string name="transaction_list_empty_list_message">Nenhum lançamento encontrado.</string>
     <string name="transaction_list_app_bar_title">Lançamentos</string>
 
+    <!-- Transaction Form   -->
+    <string name="transaction_form_app_bar_title_new_transaction">Nova transação</string>
+    <string name="transaction_form_app_bar_title_edit_transaction">Editar transação</string>
+    <string name="transaction_form_category_field">Categoria</string>
+    <string name="transaction_form_description_field">Descrição</string>
+    <string name="transaction_form_value_field">Valor</string>
+    <string name="transaction_form_date_field">Data</string>
+    <string name="transaction_form_transaction_type_field">Tipo do lançamento</string>
+    <string name="transaction_form_transaction_saved">Lançamento salvo com sucesso!</string>
 
+    <!-- Mentor Chat -->
+    <string name="mentor_chat_app_bar_title">Chat com o MenFin</string>
+    <string name="mentor_chat_typing_your_question">Digite sua pergunta...</string>
+    <string name="mentor_chat_send_message">Enviar mensagem</string>
+    <string name="mentor_chat_avatar">Avatar</string>
 
-
+    <!-- Mentor Hub -->
+    <string name="mentor_hub_ai_icon">Ícone da IA</string>
+    <string name="mentor_hub_apresentation">Olá! Sou MenFin, seu mentor financeiro</string>
+    <string name="mentor_hub_choose_question_description">Comece com uma pergunta rápida ou abra nosso chat para uma conversa detalhada.</string>
+    <string name="mentor_hub_suggestion_questions">Sugestões de perguntas</string>
+    <string name="mentor_hub_open_chat">Abrir chat</string>
 
 </resources>

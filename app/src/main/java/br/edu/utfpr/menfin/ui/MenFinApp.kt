@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.edu.utfpr.menfin.ui.drawer.Drawer
 import br.edu.utfpr.menfin.ui.home.HomeScreen
+import br.edu.utfpr.menfin.ui.mentor.chat.MentorChatScreen
 import br.edu.utfpr.menfin.ui.mentor.hub.MentorHubScreen
 import br.edu.utfpr.menfin.ui.onboarding.OnboardingScreen
 import br.edu.utfpr.menfin.ui.splash.SplashScreen
@@ -36,6 +37,7 @@ object Screens {
     const val TRANSACTION = "transactions"
     const val TRANSACTION_FORM = "transactionsForm"
     const val MENTOR = "mentor"
+    const val MENTOR_CHAT = "mentorChat"
 }
 
 object Arguments {
@@ -52,6 +54,7 @@ object Routes {
     const val TRANSACTION_FORM =
         "${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}={${Arguments.TRANSACTION_ID}}"
     const val MENTOR = Screens.MENTOR
+    const val MENTOR_CHAT = Screens.MENTOR_CHAT
 }
 
 @Composable
@@ -72,10 +75,9 @@ fun MenFinApp(
         modifier = modifier
     ) {
         composable(route = Routes.SPLASH) {
-            SplashScreen(onFinishSplash = { userLogged ->
-                if (userLogged) navigateTo(navController, Routes.REGISTER)
-                else navigateTo(navController, Routes.LOGIN)
-            })
+            SplashScreen(
+                onFinishSplash = { navigateTo(navController, Routes.LOGIN) }
+            )
         }
         composable(route = Routes.REGISTER) {
             RegisterScreen(
@@ -145,10 +147,17 @@ fun MenFinApp(
                 currentRoute = currentRoute,
                 navController = navController
             ) {
-               MentorHubScreen(
-                   openDrawer = { coroutineScope.launch { drawerState.open() } }
-               ) { }
+                MentorHubScreen(
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
+                    onNavigateToChat = {
+                        navController.navigate(Routes.MENTOR_CHAT)
+                    }
+                )
             }
+        }
+
+        composable(route = Routes.MENTOR_CHAT) {
+            MentorChatScreen(onBackPressed = { navController.popBackStack() })
         }
     }
 }

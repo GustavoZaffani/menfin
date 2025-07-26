@@ -43,7 +43,7 @@ fun TransactionFormScreen(
         if (viewModel.uiState.transactionSaved) {
             Toast.makeText(
                 context,
-                "Lançamento salvo com sucesso!",
+                R.string.transaction_form_transaction_saved,
                 Toast.LENGTH_LONG
             ).show()
             onTransactionSaved()
@@ -108,37 +108,37 @@ private fun FormContent(
     ) {
         DropdownField(
             selectedValue = formState.type.value,
-            label = "Tipo do lançamento",
+            label = stringResource(R.string.transaction_form_transaction_type_field),
             onValueChangedEvent = onTypeChanged,
             errorMessageCode = formState.type.errorMessageCode,
             options = TransactionType.getDescriptionList()
         )
         CurrencyField(
             modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.transaction_form_value_field),
             value = formState.value.value,
             onValueChange = onValueChanged,
-            label = "Valor",
             errorMessageCode = formState.value.errorMessageCode,
             onClearValue = onClearValue
         )
         TextField(
             modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.transaction_form_description_field),
             value = formState.description.value,
             onValueChange = onDescriptionChanged,
-            label = "Descrição",
             errorMessageCode = formState.description.errorMessageCode,
             onClearValue = onClearDescription
         )
         DropdownField(
             selectedValue = formState.category.value,
-            label = "Categoria",
+            label = stringResource(R.string.transaction_form_category_field),
             onValueChangedEvent = onCategoryChanged,
             errorMessageCode = formState.category.errorMessageCode,
             options = TransactionCategory.getDescriptionList()
         )
         DatePickerField(
-            label = "Data",
             value = formState.date.value,
+            label = stringResource(R.string.transaction_form_date_field),
             onValueChange = onDateChanged,
             errorMessageCode = formState.date.errorMessageCode,
             onClearValue = onClearDate
@@ -172,7 +172,9 @@ private fun TransactionAppBar(
     onBackPressed: () -> Unit,
     onSavePressed: () -> Unit
 ) {
-    val title = if (isNewTransaction) "Nova transação" else "Editar transação"
+    val title = if (isNewTransaction) {
+        stringResource(R.string.transaction_form_app_bar_title_new_transaction)
+    } else stringResource(R.string.transaction_form_app_bar_title_edit_transaction)
 
     AppBar(
         modifier = modifier,
@@ -211,7 +213,7 @@ private fun TransactionBarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun TransactionListScreenPreview() {
+private fun TransactionListScreenPreview() {
     MenfinTheme {
         TransactionFormScreen(
             onBackPressed = {},

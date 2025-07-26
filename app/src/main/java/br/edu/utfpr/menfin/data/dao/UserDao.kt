@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import br.edu.utfpr.menfin.data.db.DatabaseHelper
 import br.edu.utfpr.menfin.data.model.UserModel
-import br.edu.utfpr.menfin.extensions.toBrazilianDateFormat
 
 class UserDao(ctx: Context) {
 

@@ -248,7 +248,7 @@ private fun Step1Content(
 }
 
 @Composable
-fun Step2Content(
+private fun Step2Content(
     formState: FormState,
     onKnowledgeLevelChanged: (String) -> Unit,
     onMainGoalChanged: (String) -> Unit,
@@ -327,7 +327,7 @@ fun Step2Content(
 
 @Preview(showBackground = true)
 @Composable
-fun OnboardingScreenLightPreview() {
+private fun OnboardingScreenLightPreview() {
     MenfinTheme {
         OnboardingScreen(onOnboardingFinished = {})
     }

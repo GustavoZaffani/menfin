@@ -51,7 +51,7 @@ fun MentorHubScreen(
             ) {
                 Icon(
                     Icons.AutoMirrored.Filled.Chat,
-                    contentDescription = "Abrir Chat",
+                    contentDescription = stringResource(R.string.mentor_hub_open_chat),
                     tint = Color.White
                 )
             }
@@ -103,7 +103,7 @@ fun MentorHubContent(
 
         Column(horizontalAlignment = Alignment.Start) {
             Text(
-                "Sugestões de perguntas",
+                stringResource(R.string.mentor_hub_suggestion_questions),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dp, bottom = 12.dp)
@@ -127,18 +127,18 @@ fun WelcomeHeader() {
     ) {
         Icon(
             imageVector = Icons.Default.AutoAwesome,
-            contentDescription = "Ícone do Mentor",
+            contentDescription = stringResource(R.string.mentor_hub_ai_icon),
             tint = AppPrimaryColor,
             modifier = Modifier.size(48.dp)
         )
         Text(
             textAlign = TextAlign.Center,
-            text = "Olá! Sou MenFin, seu mentor financeiro",
+            text = stringResource(R.string.mentor_hub_apresentation),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Comece com uma pergunta rápida ou abra nosso chat para uma conversa detalhada.",
+            text = stringResource(R.string.mentor_hub_choose_question_description),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = Color.Gray,
@@ -165,7 +165,7 @@ fun QuestionCard(question: String, onClick: () -> Unit) {
         ) {
             Icon(
                 imageVector = Icons.Default.AutoAwesome,
-                contentDescription = "Ícone de IA",
+                contentDescription = stringResource(R.string.mentor_hub_ai_icon),
                 tint = AppPrimaryColor.copy(alpha = 0.8f),
                 modifier = Modifier.size(24.dp)
             )
@@ -229,7 +229,7 @@ private fun MentorAppBar(
 ) {
     AppBar(
         modifier = modifier,
-        title = "MenFin",
+        title = stringResource(R.string.app_name),
         showActions = false,
         navigationIcon = {
             IconButton(onClick = openDrawer) {
