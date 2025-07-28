@@ -1,5 +1,6 @@
 package br.edu.utfpr.menfin.ui.mentor.hub
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,10 +34,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,16 +48,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.utfpr.menfin.R
 import br.edu.utfpr.menfin.ui.onboarding.AppPrimaryColor
 import br.edu.utfpr.menfin.ui.shared.components.AppBar
+import br.edu.utfpr.menfin.ui.shared.components.RatingBar
 import br.edu.utfpr.menfin.ui.shared.utils.buildAnnotatedStringWithMarkdown
 import br.edu.utfpr.menfin.ui.theme.MenfinTheme
 
@@ -64,11 +73,27 @@ fun MentorHubScreen(
     onNavigateToChat: () -> Unit
 ) {
     var showModal by remember { mutableStateOf(false) }
+    var showFeedbackDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    LaunchedEffect(viewModel.uiState.feedbackSaved) {
+        if (viewModel.uiState.feedbackSaved) {
+            Toast.makeText(
+                context,
+                R.string.mentor_hub_thanks_for_feedback,
+                Toast.LENGTH_LONG
+            ).show()
+            showFeedbackDialog = false
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
-            MentorAppBar(openDrawer = openDrawer)
+            MentorAppBar(
+                openDrawer = openDrawer,
+                onFeedbackPressed = { showFeedbackDialog = true }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -106,6 +131,19 @@ fun MentorHubScreen(
                 isLoading = viewModel.uiState.loadingAnswer
             )
         }
+    }
+
+    if (showFeedbackDialog) {
+        FeedbackDialog(
+            feedbackState = viewModel.uiState.feedbackState,
+            onCommentChanged = viewModel::onCommentChanged,
+            onRatingChanged = viewModel::onRatingChanged,
+            onDismiss = {
+                viewModel.onCancelFeedback()
+                showFeedbackDialog = false
+            },
+            onSubmit = viewModel::onSubmitFeedback
+        )
     }
 }
 
@@ -252,12 +290,13 @@ fun AnswerBottomSheetContent(
 @Composable
 private fun MentorAppBar(
     modifier: Modifier = Modifier,
+    onFeedbackPressed: () -> Unit,
     openDrawer: () -> Unit
 ) {
     AppBar(
         modifier = modifier,
         title = stringResource(R.string.app_name),
-        showActions = false,
+        showActions = true,
         navigationIcon = {
             IconButton(onClick = openDrawer) {
                 Icon(
@@ -267,6 +306,15 @@ private fun MentorAppBar(
                 )
             }
         },
+        actions = {
+            IconButton(onClick = onFeedbackPressed) {
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    tint = Color.White,
+                    contentDescription = stringResource(R.string.mentor_hub_give_feedback)
+                )
+            }
+        }
     )
 }
 
@@ -278,5 +326,79 @@ fun MentorHubScreenPreview() {
             openDrawer = {},
             onNavigateToChat = {},
         )
+    }
+}
+
+@Composable
+fun FeedbackDialog(
+    modifier: Modifier = Modifier,
+    feedbackState: FeedbackState,
+    onDismiss: () -> Unit,
+    onRatingChanged: (Int) -> Unit,
+    onCommentChanged: (String) -> Unit,
+    onSubmit: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = modifier,
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.mentor_hub_rate_the_mentor),
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = stringResource(R.string.mentor_hub_rate_the_mentor_description),
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                RatingBar(
+                    rating = feedbackState.rating.value.toInt(),
+                    onRatingChanged = onRatingChanged
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                OutlinedTextField(
+                    value = feedbackState.comment.value,
+                    onValueChange = onCommentChanged,
+                    label = {
+                        Text(text = stringResource(R.string.mentor_hub_feedback_comment_input))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    maxLines = 4
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(text = stringResource(R.string.generic_to_cancel))
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = onSubmit,
+                        enabled = feedbackState.feedbackCompleted
+                    ) {
+                        Text(text = stringResource(R.string.generic_send))
+                    }
+                }
+            }
+        }
     }
 }

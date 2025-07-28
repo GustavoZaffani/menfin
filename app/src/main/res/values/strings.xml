@@ -34,6 +34,7 @@
     <string name="generic_edit">Editar</string>
     <string name="generic_duplicate">Duplicar</string>
     <string name="generic_you">Você</string>
+    <string name="generic_send">Enviar</string>
 
     <!-- Empty list -->
     <string name="empty_list_content_description_icon">ícone</string>
@@ -90,5 +91,10 @@
     <string name="mentor_hub_choose_question_description">Comece com uma pergunta rápida ou abra nosso chat para uma conversa detalhada.</string>
     <string name="mentor_hub_suggestion_questions">Sugestões de perguntas</string>
     <string name="mentor_hub_open_chat">Abrir chat</string>
+    <string name="mentor_hub_give_feedback">Dar feedback</string>
+    <string name="mentor_hub_thanks_for_feedback">Obrigado pelo feedback!</string>
+    <string name="mentor_hub_rate_the_mentor">Avalie o MenFin</string>
+    <string name="mentor_hub_rate_the_mentor_description">Sua avaliação me ajuda a te dar melhores sugestões.</string>
+    <string name="mentor_hub_feedback_comment_input">Deixe seu comentário</string>
 
 </resources>

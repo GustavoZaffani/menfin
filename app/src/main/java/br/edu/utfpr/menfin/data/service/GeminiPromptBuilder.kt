@@ -1,6 +1,7 @@
 package br.edu.utfpr.menfin.data.service
 
 import br.edu.utfpr.menfin.data.model.ChatHistoryModel
+import br.edu.utfpr.menfin.data.model.FeedbackModel
 import br.edu.utfpr.menfin.data.model.OnboardingModel
 import br.edu.utfpr.menfin.data.model.Sender
 import br.edu.utfpr.menfin.data.model.TransactionModel
@@ -18,6 +19,7 @@ class GeminiPromptBuilder {
     fun buildPrompt(
         onboardingData: OnboardingModel,
         transactions: List<TransactionModel>,
+        feedbacks: List<FeedbackModel>,
         question: String
     ): String {
         return buildString {
@@ -26,6 +28,8 @@ class GeminiPromptBuilder {
             append(getUserContext(onboardingData))
             append(DOUBLE_BREAK)
             append(getTransactionsContext(transactions))
+            append(DOUBLE_BREAK)
+            append(getFeedbacksContext(feedbacks))
             append(DOUBLE_BREAK)
 
             append("--- PERGUNTA DO USUÁRIO ---\n")
@@ -38,7 +42,8 @@ class GeminiPromptBuilder {
     fun buildChatPrompt(
         onboardingData: OnboardingModel,
         transactions: List<TransactionModel>,
-        chatHistory: List<ChatHistoryModel>
+        chatHistory: List<ChatHistoryModel>,
+        feedbacks: List<FeedbackModel>,
     ): String {
         return buildString {
             append(getObjectiveContext())
@@ -47,6 +52,8 @@ class GeminiPromptBuilder {
             append(getUserContext(onboardingData))
             append(DOUBLE_BREAK)
             append(getTransactionsContext(transactions))
+            append(DOUBLE_BREAK)
+            append(getFeedbacksContext(feedbacks))
             append(DOUBLE_BREAK)
             append("--- HISTÓRICO DA CONVERSA ATUAL ---\n")
             chatHistory.forEach { message ->
@@ -97,6 +104,23 @@ class GeminiPromptBuilder {
                         val date = transaction.date.toBrazilianDateFormat()
                         val value = formatCurrency(transaction.value)
                         "$date: $type de $value - ${transaction.description} (Categoria: ${transaction.category})"
+                    }
+        }
+    }
+
+    private fun getFeedbacksContext(feedbacks: List<FeedbackModel>): String {
+        return if (feedbacks.isEmpty()) {
+            """
+                --- FEEDBACKS DO USUÁRIO (Com base nas suas respostas anteriores) ---
+                O usuário ainda não enviou nenhum feedback.
+            """.trimIndent()
+        } else {
+            "--- FEEDBACKS DO USUÁRIO (Com base nas suas respostas anteriores) --- \n" +
+                    feedbacks.joinToString("\n") { feedback ->
+                        val rating = feedback.rating
+                        val comment = feedback.comment
+                        val date = feedback.timestamp.toBrazilianDateFormat()
+                        "Data: $date - Avaliação: $rating - Comentário: $comment"
                     }
         }
     }

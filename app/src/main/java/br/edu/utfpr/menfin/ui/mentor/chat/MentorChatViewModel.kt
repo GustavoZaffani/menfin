@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import br.edu.utfpr.menfin.data.dao.ChatHistoryDao
+import br.edu.utfpr.menfin.data.dao.FeedbackDao
 import br.edu.utfpr.menfin.data.dao.OnboardingDao
 import br.edu.utfpr.menfin.data.dao.TransactionDao
 import br.edu.utfpr.menfin.data.local.DataStore
@@ -29,6 +30,7 @@ class MentorChatViewModel(
     private val onboardingDao: OnboardingDao,
     private val transactionDao: TransactionDao,
     private val chatHistoryDao: ChatHistoryDao,
+    private val feedbackDao: FeedbackDao,
     private val dataStore: DataStore,
     private val geminiService: GeminiService,
     private val promptBuilder: GeminiPromptBuilder
@@ -68,11 +70,13 @@ class MentorChatViewModel(
 
                 val onboardingData = onboardingDao.findByUser(userId)
                 val transactions = transactionDao.findAllByUser(userId)
+                val feedbacks = feedbackDao.findAllByUser(userId)
 
                 val prompt = promptBuilder.buildChatPrompt(
                     onboardingData = onboardingData!!,
                     transactions = transactions,
-                    chatHistory = uiState.messages.dropLast(1)
+                    chatHistory = uiState.messages.dropLast(1),
+                    feedbacks = feedbacks
                 )
 
                 val result = geminiService.getGenerativeContent(prompt)
@@ -155,7 +159,8 @@ class MentorChatViewModel(
                     dataStore = DataStore(application),
                     geminiService = GeminiService(),
                     promptBuilder = GeminiPromptBuilder(),
-                    chatHistoryDao = ChatHistoryDao(application)
+                    chatHistoryDao = ChatHistoryDao(application),
+                    feedbackDao = FeedbackDao(application)
                 )
             }
         }
