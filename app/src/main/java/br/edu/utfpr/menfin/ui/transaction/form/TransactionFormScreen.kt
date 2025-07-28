@@ -17,12 +17,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.utfpr.menfin.R
 import br.edu.utfpr.menfin.data.model.TransactionCategory
 import br.edu.utfpr.menfin.data.model.TransactionType
 import br.edu.utfpr.menfin.ui.shared.components.AppBar
 import br.edu.utfpr.menfin.ui.shared.components.DefaultActionFormToolbar
+import br.edu.utfpr.menfin.ui.shared.components.WarningCard
 import br.edu.utfpr.menfin.ui.shared.components.form.CurrencyField
 import br.edu.utfpr.menfin.ui.shared.components.form.DatePickerField
 import br.edu.utfpr.menfin.ui.shared.components.form.DropdownField
@@ -71,21 +73,29 @@ fun TransactionFormScreen(
             )
         }
     ) { innerPadding ->
-        FormContent(
+        Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
-                .fillMaxSize(),
-            formState = formState,
-            onDescriptionChanged = viewModel::onDescriptionChanged,
-            onValueChanged = viewModel::onValueChanged,
-            onCategoryChanged = viewModel::onCategoryChanged,
-            onTypeChanged = viewModel::onTypeChanged,
-            onDateChanged = viewModel::onDateChanged,
-            onClearDescription = viewModel::onClearDescription,
-            onClearValue = viewModel::onClearValue,
-            onClearDate = viewModel::onClearDate
-        )
-
+        ) {
+            if (viewModel.uiState.isDuplicateTransaction) {
+                WarningCard(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = stringResource(R.string.transaction_form_duplication_message)
+                )
+            }
+            FormContent(
+                formState = formState,
+                onDescriptionChanged = viewModel::onDescriptionChanged,
+                onValueChanged = viewModel::onValueChanged,
+                onCategoryChanged = viewModel::onCategoryChanged,
+                onTypeChanged = viewModel::onTypeChanged,
+                onDateChanged = viewModel::onDateChanged,
+                onClearDescription = viewModel::onClearDescription,
+                onClearValue = viewModel::onClearValue,
+                onClearDate = viewModel::onClearDate
+            )
+        }
     }
 }
 

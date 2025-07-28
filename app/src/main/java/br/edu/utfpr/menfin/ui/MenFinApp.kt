@@ -42,6 +42,7 @@ object Screens {
 
 object Arguments {
     const val TRANSACTION_ID = "transactionId"
+    const val TRANSACTION_CLICK_ACTION = "transactionClickAction"
 }
 
 object Routes {
@@ -52,7 +53,7 @@ object Routes {
     const val ONBOARDING = Screens.ONBOARDING
     const val TRANSACTION_LIST = Screens.TRANSACTION
     const val TRANSACTION_FORM =
-        "${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}={${Arguments.TRANSACTION_ID}}"
+        "${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}={${Arguments.TRANSACTION_ID}}&${Arguments.TRANSACTION_CLICK_ACTION}={${Arguments.TRANSACTION_CLICK_ACTION}}"
     const val MENTOR = Screens.MENTOR
     const val MENTOR_CHAT = Screens.MENTOR_CHAT
 }
@@ -122,8 +123,8 @@ fun MenFinApp(
                 TransactionListScreen(
                     onNavigateToForm = { navController.navigate(Screens.TRANSACTION_FORM) },
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
-                    onTransactionPressed = { transaction ->
-                        navController.navigate("${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}=${transaction._id}")
+                    onTransactionPressed = { transaction, action ->
+                        navController.navigate("${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}=${transaction._id}&${Arguments.TRANSACTION_CLICK_ACTION}=${action.name}")
                     }
                 )
             }
@@ -132,7 +133,8 @@ fun MenFinApp(
         composable(
             route = Routes.TRANSACTION_FORM,
             arguments = listOf(
-                navArgument(name = "id") { type = NavType.StringType; nullable = true }
+                navArgument(name = Arguments.TRANSACTION_ID) { type = NavType.StringType; nullable = true },
+                navArgument(name = Arguments.TRANSACTION_CLICK_ACTION) { type = NavType.StringType; nullable = true }
             )
         ) {
             TransactionFormScreen(

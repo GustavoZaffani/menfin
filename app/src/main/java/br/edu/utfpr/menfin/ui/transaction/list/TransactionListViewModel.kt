@@ -15,6 +15,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+enum class TransactionClickAction {
+    EDIT,
+    DUPLICATE
+}
+
 data class TransactionListUiState(
     val loading: Boolean = false,
     val processingDelete: Boolean = false,
@@ -22,6 +27,7 @@ data class TransactionListUiState(
     val showConfirmationDialog: Boolean = false,
     val transactionIdToDelete: Int = 0,
     val transactionDeleted: Boolean = false,
+    val transactionPressed: TransactionModel? = null
 ) {
     val loadingMessage: String
         get() = if (loading) "Carregando lançamentos..." else if (processingDelete) "Excluindo lançamento..." else ""
@@ -91,6 +97,12 @@ class TransactionListViewModel(
         uiState = uiState.copy(
             showConfirmationDialog = false,
             transactionIdToDelete = 0
+        )
+    }
+
+    fun onTransactionPressed(transaction: TransactionModel) {
+        uiState = uiState.copy(
+            transactionPressed = transaction
         )
     }
 
