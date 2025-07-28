@@ -31,6 +31,8 @@
     <string name="generic_to_save">Salvar</string>
     <string name="generic_to_update">Atualizar</string>
     <string name="generic_to_confirm">Confirmar</string>
+    <string name="generic_edit">Editar</string>
+    <string name="generic_duplicate">Duplicar</string>
     <string name="generic_you">Você</string>
 
     <!-- Empty list -->
@@ -74,6 +76,7 @@
     <string name="transaction_form_date_field">Data</string>
     <string name="transaction_form_transaction_type_field">Tipo do lançamento</string>
     <string name="transaction_form_transaction_saved">Lançamento salvo com sucesso!</string>
+    <string name="transaction_form_duplication_message">Este lançamento teve como base um lançamento existente, portanto é necessário mudar algumas informações.</string>
 
     <!-- Mentor Chat -->
     <string name="mentor_chat_app_bar_title">Chat com o MenFin</string>

@@ -23,6 +23,7 @@ import br.edu.utfpr.menfin.ui.shared.utils.FormField
 import br.edu.utfpr.menfin.ui.shared.utils.FormFieldUtils
 import br.edu.utfpr.menfin.ui.shared.utils.FormFieldUtils.Companion.runValidations
 import br.edu.utfpr.menfin.ui.shared.utils.FormFieldUtils.Companion.validateFieldRequired
+import br.edu.utfpr.menfin.ui.transaction.list.TransactionClickAction
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -51,9 +52,12 @@ data class TransactionFormUiState(
     val formState: FormState = FormState(),
     val isSaving: Boolean = false,
     val transactionSaved: Boolean = false,
-    val generalErrorMessage: String = ""
+    val generalErrorMessage: String = "",
+    val transactionClickAction: TransactionClickAction? = TransactionClickAction.EDIT
 ) {
-    val isNewTransaction: Boolean get() = transactionId == 0
+    val isDuplicateTransaction: Boolean
+        get() = transactionClickAction == TransactionClickAction.DUPLICATE
+    val isNewTransaction: Boolean get() = transactionId == 0 || isDuplicateTransaction
 }
 
 class TransactionFormViewModel(
@@ -65,11 +69,14 @@ class TransactionFormViewModel(
     var uiState: TransactionFormUiState by mutableStateOf(TransactionFormUiState())
     private val transactionId: Int? =
         savedStateHandle.get<String>(Arguments.TRANSACTION_ID)?.toInt()
+    private val transactionClickAction: String? =
+        savedStateHandle.get<String>(Arguments.TRANSACTION_CLICK_ACTION)
 
     init {
         if (transactionId != null) {
             uiState = uiState.copy(
-                transactionId = transactionId
+                transactionId = transactionId,
+                transactionClickAction = TransactionClickAction.valueOf(transactionClickAction!!)
             )
             loadTransaction()
         }
@@ -107,7 +114,7 @@ class TransactionFormViewModel(
             userId = dataStore.userLoggedFlow.first()!!.id
         )
 
-        if (existingTransaction != null && existingTransaction._id != transactionId) {
+        if (existingTransaction != null && (uiState.isDuplicateTransaction || existingTransaction._id != transactionId)) {
             uiState = uiState.copy(
                 generalErrorMessage = "Já existe um lançamento com os mesmos dados."
             )
@@ -130,7 +137,7 @@ class TransactionFormViewModel(
             )
 
             val newTransaction = TransactionModel(
-                _id = transactionId.let { if (it == 0) null else it },
+                _id = transactionId.let { if (it == 0 || uiState.isDuplicateTransaction) null else it },
                 type = TransactionType.fromDescription(uiState.formState.type.value).name,
                 value = uiState.formState.value.value.toDouble(),
                 description = uiState.formState.description.value,
