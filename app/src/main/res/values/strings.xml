@@ -110,5 +110,10 @@
     <string name="goal_list_empty_list_message">Nenhuma meta cadastrada.</string>
     <string name="goal_list_loading_message">Carregando metas...</string>
     <string name="goal_list_add_new_goal">Adicionar meta</string>
+    <string name="goal_list_insights">Insights</string>
+    <string name="goal_list_show_insights">Ver insights</string>
+    <string name="goal_list_menfin_insights">Insights do MenFin</string>
+    <string name="goal_list_sure_and_close">Entendi, fechar</string>
+    <string name="goal_list_insight_type">Tipo de insight</string>
 
 </resources>

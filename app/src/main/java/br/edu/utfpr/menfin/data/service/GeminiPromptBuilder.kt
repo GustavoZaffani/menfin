@@ -2,6 +2,7 @@ package br.edu.utfpr.menfin.data.service
 
 import br.edu.utfpr.menfin.data.model.ChatHistoryModel
 import br.edu.utfpr.menfin.data.model.FeedbackModel
+import br.edu.utfpr.menfin.data.model.GoalModel
 import br.edu.utfpr.menfin.data.model.OnboardingModel
 import br.edu.utfpr.menfin.data.model.Sender
 import br.edu.utfpr.menfin.data.model.TransactionModel
@@ -67,6 +68,52 @@ class GeminiPromptBuilder {
         }
     }
 
+    fun buildInsightsPrompt(
+        onboardingData: OnboardingModel,
+        transactions: List<TransactionModel>,
+        feedbacks: List<FeedbackModel>,
+        goals: List<GoalModel>
+    ): String {
+        return buildString {
+            append(
+                """
+                Você é um mentor financeiro amigável e prestativo chamado MenFin.
+                É um especialista em finanças e seu trabalho é analisar os dados de um usuário e gerar insights acionáveis.
+                Sua resposta DEVE ser um JSON válido contendo uma lista de objetos.
+                Cada objeto deve ter duas chaves: "text" (o insight) e "type" ("POSITIVE" ou "ATTENTION").
+                Exemplo de formato de saída:
+                [
+                  {
+                    "text": "Seu progresso na meta 'Reserva de Emergência' está excelente. Continue assim!",
+                    "type": "POSITIVE"
+                  },
+                  {
+                    "text": "Sua meta 'Viagem' precisa de atenção. O ritmo de economia atual não será suficiente para atingir o prazo.",
+                    "type": "ATTENTION"
+                  }
+                ]
+                """.trimIndent()
+            )
+            append(DOUBLE_BREAK)
+            append(getUserContext(onboardingData))
+            append(DOUBLE_BREAK)
+            append(getTransactionsContext(transactions))
+            append(DOUBLE_BREAK)
+            append(getGoalsContext(goals))
+            append(DOUBLE_BREAK)
+            append(getFeedbacksContext(feedbacks))
+            append(DOUBLE_BREAK)
+            append(
+                """
+                --- INSTRUÇÃO FINAL ---
+                Analise TODOS os dados fornecidos e gere de 3 a 4 insights concisos e úteis para o usuário, seguindo estritamente o formato JSON especificado.
+                Os insights precisam ser direcionados as metas definidas.
+                IMPORTANTE: Quero a resposta em rawText, não quero que venha formatado como markdown ou qualquer outro tipo de formatação.
+                """.trimIndent()
+            )
+        }
+    }
+
     private fun formatCurrency(value: Double): String {
         return NumberFormat.getCurrencyInstance(Locale("pt", "BR")).format(value)
     }
@@ -121,6 +168,22 @@ class GeminiPromptBuilder {
                         val comment = feedback.comment
                         val date = feedback.timestamp.toBrazilianDateFormat()
                         "Data: $date - Avaliação: $rating - Comentário: $comment"
+                    }
+        }
+    }
+
+    private fun getGoalsContext(goals: List<GoalModel>): String {
+        return if (goals.isEmpty()) {
+            """
+                --- METAS CADASTRADAS PELO USUÁRIO ---
+                O usuário ainda não cadastrou nenhuma meta.
+            """.trimIndent()
+        } else {
+            "--- METAS CADASTRADAS PELO USUÁRIO --- \n" +
+                    goals.joinToString("\n") { goal ->
+                        val value = formatCurrency(goal.value)
+                        val targetDate = goal.targetDate.toBrazilianDateFormat()
+                        "Meta: ${goal.description} - Valor: $value - Prazo: $targetDate (Prioridade: ${goal.priority.label})"
                     }
         }
     }
