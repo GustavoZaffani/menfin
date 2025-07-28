@@ -16,6 +16,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.edu.utfpr.menfin.ui.drawer.Drawer
+import br.edu.utfpr.menfin.ui.goal.form.GoalFormScreen
+import br.edu.utfpr.menfin.ui.goal.list.GoalListScreen
 import br.edu.utfpr.menfin.ui.home.HomeScreen
 import br.edu.utfpr.menfin.ui.mentor.chat.MentorChatScreen
 import br.edu.utfpr.menfin.ui.mentor.hub.MentorHubScreen
@@ -38,6 +40,8 @@ object Screens {
     const val TRANSACTION_FORM = "transactionsForm"
     const val MENTOR = "mentor"
     const val MENTOR_CHAT = "mentorChat"
+    const val GOAL = "goals"
+    const val GOAL_FORM = "goalsForm"
 }
 
 object Arguments {
@@ -56,6 +60,8 @@ object Routes {
         "${Screens.TRANSACTION_FORM}?${Arguments.TRANSACTION_ID}={${Arguments.TRANSACTION_ID}}&${Arguments.TRANSACTION_CLICK_ACTION}={${Arguments.TRANSACTION_CLICK_ACTION}}"
     const val MENTOR = Screens.MENTOR
     const val MENTOR_CHAT = Screens.MENTOR_CHAT
+    const val GOAL_LIST = Screens.GOAL
+    const val GOAL_FORM = Screens.GOAL_FORM
 }
 
 @Composable
@@ -133,8 +139,12 @@ fun MenFinApp(
         composable(
             route = Routes.TRANSACTION_FORM,
             arguments = listOf(
-                navArgument(name = Arguments.TRANSACTION_ID) { type = NavType.StringType; nullable = true },
-                navArgument(name = Arguments.TRANSACTION_CLICK_ACTION) { type = NavType.StringType; nullable = true }
+                navArgument(name = Arguments.TRANSACTION_ID) {
+                    type = NavType.StringType; nullable = true
+                },
+                navArgument(name = Arguments.TRANSACTION_CLICK_ACTION) {
+                    type = NavType.StringType; nullable = true
+                }
             )
         ) {
             TransactionFormScreen(
@@ -161,6 +171,26 @@ fun MenFinApp(
         composable(route = Routes.MENTOR_CHAT) {
             MentorChatScreen(onBackPressed = { navController.popBackStack() })
         }
+
+        composable(route = Routes.GOAL_LIST) {
+            DefaultDrawer(
+                drawerState = drawerState,
+                currentRoute = currentRoute,
+                navController = navController
+            ) {
+                GoalListScreen(
+                    onNavigateToForm = { navController.navigate(Routes.GOAL_FORM) },
+                    openDrawer = { coroutineScope.launch { drawerState.open() } }
+                )
+            }
+        }
+
+        composable(route = Routes.GOAL_FORM) {
+            GoalFormScreen (
+                onGoalSaved = { navigateTo(navController, Routes.GOAL_LIST) },
+                onBackPressed = { navController.popBackStack() }
+            )
+        }
     }
 }
 
@@ -177,6 +207,7 @@ fun DefaultDrawer(
         onLogoutSuccess = { navigateTo(navController, Routes.LOGIN) },
         onTransactionPressed = { navigateTo(navController, Routes.TRANSACTION_LIST) },
         onMentorPressed = { navigateTo(navController, Routes.MENTOR) },
+        onGoalPressed = { navigateTo(navController, Routes.GOAL_LIST) },
     ) {
         content()
     }

@@ -70,7 +70,7 @@ import br.edu.utfpr.menfin.ui.shared.components.AppBar
 import br.edu.utfpr.menfin.ui.shared.components.ConfirmationDialog
 import br.edu.utfpr.menfin.ui.shared.components.EmptyList
 import br.edu.utfpr.menfin.ui.shared.components.Loading
-import br.edu.utfpr.menfin.ui.shared.components.TransactionList
+import br.edu.utfpr.menfin.ui.shared.components.CommonList
 import br.edu.utfpr.menfin.ui.theme.MenfinTheme
 import java.text.NumberFormat
 import java.util.Locale
@@ -185,7 +185,7 @@ private fun TransactionContent(
     onTransactionPressed: (TransactionModel) -> Unit,
     onTransactionLongPressed: (TransactionModel) -> Unit
 ) {
-    TransactionList(
+    CommonList(
         modifier = modifier,
         items = transactions,
         onItemPressed = onTransactionPressed,
