@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.automirrored.outlined.Segment
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerState
@@ -52,6 +53,7 @@ fun Drawer(
     viewModel: DrawerViewModel = viewModel(factory = DrawerViewModel.Factory),
     onLogoutSuccess: () -> Unit,
     onTransactionPressed: () -> Unit,
+    onGoalPressed: () -> Unit,
     onMentorPressed: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -73,6 +75,7 @@ fun Drawer(
                     currentRoute = currentRoute,
                     onTransactionPressed = onTransactionPressed,
                     onMentorPressed = onMentorPressed,
+                    onGoalPressed = onGoalPressed,
                     closeDrawer = { coroutineScope.launch { drawerState.close() } },
                     onLogout = viewModel::logout
                 )
@@ -90,6 +93,7 @@ private fun DrawerSheet(
     userLogged: String,
     onTransactionPressed: () -> Unit,
     onMentorPressed: () -> Unit,
+    onGoalPressed: () -> Unit,
     closeDrawer: () -> Unit,
     onLogout: () -> Unit
 ) {
@@ -103,6 +107,8 @@ private fun DrawerSheet(
                 }
             )
 
+            DrawerItemGroupTitle(title = "Cadastros")
+
             DrawerItem(
                 imageVector = Icons.AutoMirrored.Outlined.Segment,
                 label = stringResource(R.string.drawer_menu_transaction),
@@ -113,6 +119,8 @@ private fun DrawerSheet(
                 }
             )
 
+            DrawerItemGroupTitle(title = "Mentor")
+
             DrawerItem(
                 imageVector = Icons.Default.AutoAwesome,
                 label = stringResource(R.string.app_name),
@@ -120,6 +128,18 @@ private fun DrawerSheet(
                 onClick = {
                     closeDrawer()
                     onMentorPressed()
+                }
+            )
+
+            DrawerItemGroupTitle(title = "Objetivos")
+
+            DrawerItem(
+                imageVector = Icons.Default.Flag,
+                label = "Metas",
+                isSelected = currentRoute == Routes.GOAL_LIST,
+                onClick = {
+                    closeDrawer()
+                    onGoalPressed()
                 }
             )
         }
@@ -169,6 +189,7 @@ private fun DrawerPreview() {
             closeDrawer = {},
             onTransactionPressed = {},
             onMentorPressed = {},
+            onGoalPressed = {},
             onLogout = {}
         )
     }

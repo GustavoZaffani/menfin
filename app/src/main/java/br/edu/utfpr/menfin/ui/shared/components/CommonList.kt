@@ -15,10 +15,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun <T> TransactionList(
+fun <T> CommonList(
     modifier: Modifier = Modifier,
     items: List<T>,
-    onItemPressed: (T) -> Unit,
+    onItemPressed: (T) -> Unit = {},
     onLongItemPressed: (T) -> Unit = {},
     itemContent: @Composable (T) -> Unit
 ) {

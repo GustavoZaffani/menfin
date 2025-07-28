@@ -51,6 +51,15 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
         const val FEEDBACK_RATING = "rating"
         const val FEEDBACK_COMMENT = "comment"
         const val FEEDBACK_TIMESTAMP = "created_at"
+
+        // Goal table
+        const val TABLE_GOAL = "goal"
+        const val GOAL_DESCRIPTION = "description"
+        const val GOAL_VALUE = "value"
+        const val GOAL_PRIORITY = "priority"
+        const val GOAL_TARGET_DATE = "target_date"
+        const val GOAL_CREATED_AT = "created_at"
+        const val GOAL_USER_ID = "user_id"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -108,6 +117,18 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
                     " $FEEDBACK_TIMESTAMP INTEGER," +
                     " FOREIGN KEY ($FEEDBACK_USER_ID) REFERENCES $TABLE_USER($ID_KEY))"
         )
+
+        db?.execSQL(
+            "CREATE TABLE IF NOT EXISTS $TABLE_GOAL ( " +
+                    " $ID_KEY INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    " $GOAL_DESCRIPTION TEXT," +
+                    " $GOAL_VALUE REAL," +
+                    " $GOAL_PRIORITY TEXT," +
+                    " $GOAL_TARGET_DATE INTEGER," +
+                    " $GOAL_CREATED_AT INTEGER," +
+                    " $GOAL_USER_ID INTEGER," +
+                    " FOREIGN KEY ($GOAL_USER_ID) REFERENCES $TABLE_USER($ID_KEY))"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -116,6 +137,7 @@ class DatabaseHelper(ctx: Context) : SQLiteOpenHelper(ctx, DATABASE_NAME, null, 
         db?.execSQL("DROP TABLE $TABLE_TRANSACTION")
         db?.execSQL("DROP TABLE $TABLE_CHAT_HISTORY")
         db?.execSQL("DROP TABLE $TABLE_FEEDBACK")
+        db?.execSQL("DROP TABLE $TABLE_GOAL")
         onCreate(db)
     }
 }

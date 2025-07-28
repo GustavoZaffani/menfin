@@ -77,5 +77,30 @@ class FormFieldUtils {
                 null
             }
         }
+
+        fun validateMonetaryValue(value: String): Int? {
+            if (value.isBlank()) {
+                return null
+            }
+
+            return try {
+                value.replace(',', '.').toDouble()
+                null
+            } catch (e: NumberFormatException) {
+                R.string.error_invalid_monetary_value
+            }
+        }
+
+        fun validateValueGreaterThanZero(value: String): Int? {
+            if (value.isBlank()) {
+                return null
+            }
+
+            return if ((value.toDoubleOrNull() ?: 0.0) <= 0.0) {
+                R.string.error_invalid_monetary_min_value
+            } else {
+                null
+            }
+        }
     }
 }
