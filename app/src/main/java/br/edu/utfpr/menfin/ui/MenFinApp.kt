@@ -208,6 +208,7 @@ fun DefaultDrawer(
         onTransactionPressed = { navigateTo(navController, Routes.TRANSACTION_LIST) },
         onMentorPressed = { navigateTo(navController, Routes.MENTOR) },
         onGoalPressed = { navigateTo(navController, Routes.GOAL_LIST) },
+        onHomePressed = { navigateTo(navController, Routes.HOME) },
     ) {
         content()
     }

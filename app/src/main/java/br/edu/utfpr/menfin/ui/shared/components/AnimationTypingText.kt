@@ -12,31 +12,41 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import kotlinx.coroutines.delay
 
 @Composable
 fun AnimationTypingText(
     text: String,
     modifier: Modifier = Modifier,
-    typingSpeed: Long
+    typingSpeed: Long = 50L,
+    showEllipsis: Boolean = true
 ) {
     var displayedText by remember { mutableStateOf("") }
-    var currentIndex by remember { mutableIntStateOf(0) }
+    var showDots by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = text) {
-        while (true) {
-            displayedText = text.take(currentIndex)
+    LaunchedEffect(text) {
+        displayedText = ""
+        for (i in text.indices) {
+            displayedText += text[i]
             delay(typingSpeed)
-            currentIndex = (currentIndex + 1) % (text.length + 1)
+        }
+        if (showEllipsis) {
+            while (true) {
+                showDots = true
+                delay(500)
+                showDots = false
+                delay(500)
+            }
         }
     }
 
     Text(
         modifier = modifier,
-        text = displayedText,
+        text = displayedText + if (showEllipsis && showDots) "..." else "",
         style = MaterialTheme.typography.headlineMedium.copy(
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center
         )
     )
 }

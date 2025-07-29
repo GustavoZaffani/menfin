@@ -17,7 +17,7 @@ import br.edu.utfpr.menfin.ui.theme.MenfinTheme
 @Composable
 fun Loading(
     modifier: Modifier = Modifier,
-    text: String
+    text: String = "Carregando"
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -26,12 +26,17 @@ fun Loading(
     ) {
         CircularProgressIndicator(
             modifier = Modifier
-                .size(80.dp)
-                .padding(bottom = 16.dp),
+                .size(72.dp)
+                .padding(bottom = 20.dp),
             color = MaterialTheme.colorScheme.primary,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
         )
-        AnimationTypingText(text = "$text...", typingSpeed = 100L)
+
+        AnimationTypingText(
+            text = text,
+            typingSpeed = 40L,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }
 

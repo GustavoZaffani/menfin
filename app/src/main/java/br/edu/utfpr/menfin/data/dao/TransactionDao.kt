@@ -1,9 +1,12 @@
 package br.edu.utfpr.menfin.data.dao
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import br.edu.utfpr.menfin.data.db.DatabaseHelper
 import br.edu.utfpr.menfin.data.model.TransactionModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class TransactionDao(ctx: Context) {
 
@@ -67,6 +70,49 @@ class TransactionDao(ctx: Context) {
         val cursor = db.rawQuery(
             "SELECT * FROM ${DatabaseHelper.TABLE_TRANSACTION} WHERE ${DatabaseHelper.TRANSACTION_USER_ID} = ? ORDER BY ${DatabaseHelper.TRANSACTION_DATE} DESC",
             arrayOf(userId.toString())
+        )
+
+        cursor.use { c ->
+            val idIndex = c.getColumnIndexOrThrow(DatabaseHelper.ID_KEY)
+            val typeIndex = c.getColumnIndexOrThrow(DatabaseHelper.TRANSACTION_TYPE)
+            val valueIndex = c.getColumnIndexOrThrow(DatabaseHelper.TRANSACTION_VALUE)
+            val descriptionIndex = c.getColumnIndexOrThrow(DatabaseHelper.TRANSACTION_DESCRIPTION)
+            val categoryIndex = c.getColumnIndexOrThrow(DatabaseHelper.TRANSACTION_CATEGORY)
+            val dateIndex = c.getColumnIndexOrThrow(DatabaseHelper.TRANSACTION_DATE)
+            val userIdIndex = c.getColumnIndexOrThrow(DatabaseHelper.TRANSACTION_USER_ID)
+
+            while (c.moveToNext()) {
+                val transactionModel = TransactionModel(
+                    _id = c.getInt(idIndex),
+                    type = c.getString(typeIndex),
+                    value = c.getDouble(valueIndex),
+                    description = c.getString(descriptionIndex),
+                    category = c.getString(categoryIndex),
+                    date = c.getLong(dateIndex),
+                    userId = c.getInt(userIdIndex)
+                )
+                transactionList.add(transactionModel)
+            }
+        }
+
+        db.close()
+
+        return transactionList
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun findByUserAndMonth(userId: Int, targetDate: Calendar): List<TransactionModel> {
+        val db = dbHelper.readableDatabase
+        val transactionList = mutableListOf<TransactionModel>()
+
+        val cursor = db.rawQuery(
+            """
+            SELECT * FROM ${DatabaseHelper.TABLE_TRANSACTION}
+            WHERE ${DatabaseHelper.TRANSACTION_USER_ID} = ?
+            AND strftime('%Y-%m', datetime(${DatabaseHelper.TRANSACTION_DATE} / 1000, 'unixepoch')) = ?
+            ORDER BY ${DatabaseHelper.TRANSACTION_DATE} DESC
+            """.trimIndent(),
+            arrayOf(userId.toString(), SimpleDateFormat("yyyy-MM").format(targetDate.time))
         )
 
         cursor.use { c ->
