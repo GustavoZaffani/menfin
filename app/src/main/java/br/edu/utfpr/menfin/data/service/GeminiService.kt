@@ -68,7 +68,7 @@ class GeminiService {
     suspend fun getGenerativeContent(prompt: String): Result<String> {
         val apiKey = BuildConfig.GEMINI_API_KEY
         val url =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$apiKey"
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey"
 
         val requestBody = GeminiRequest(
             contents = listOf(

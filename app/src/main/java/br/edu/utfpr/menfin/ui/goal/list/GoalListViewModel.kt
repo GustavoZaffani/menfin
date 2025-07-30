@@ -112,7 +112,9 @@ class GoalListViewModel(
 
             geminiService.getGenerativeContent(prompt)
                 .onSuccess { generatedInsights ->
-                    val insights = jsonParser.decodeFromString<List<InsightItem>>(generatedInsights)
+                    val insights = jsonParser.decodeFromString<List<InsightItem>>(generatedInsights
+                        .replace(Regex("```[a-zA-Z]*"), "")
+                        .replace("```", "").trim())
 
                     uiState = uiState.copy(
                         generatingInsights = false,
