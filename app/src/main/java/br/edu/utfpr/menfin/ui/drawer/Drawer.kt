@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.AddToHomeScreen
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.automirrored.outlined.Segment
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerState
@@ -54,6 +56,7 @@ fun Drawer(
     onLogoutSuccess: () -> Unit,
     onTransactionPressed: () -> Unit,
     onGoalPressed: () -> Unit,
+    onHomePressed: () -> Unit,
     onMentorPressed: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -76,6 +79,7 @@ fun Drawer(
                     onTransactionPressed = onTransactionPressed,
                     onMentorPressed = onMentorPressed,
                     onGoalPressed = onGoalPressed,
+                    onHomePressed = onHomePressed,
                     closeDrawer = { coroutineScope.launch { drawerState.close() } },
                     onLogout = viewModel::logout
                 )
@@ -94,6 +98,7 @@ private fun DrawerSheet(
     onTransactionPressed: () -> Unit,
     onMentorPressed: () -> Unit,
     onGoalPressed: () -> Unit,
+    onHomePressed: () -> Unit,
     closeDrawer: () -> Unit,
     onLogout: () -> Unit
 ) {
@@ -107,7 +112,17 @@ private fun DrawerSheet(
                 }
             )
 
-            DrawerItemGroupTitle(title = "Cadastros")
+            DrawerItem(
+                imageVector = Icons.Default.Home,
+                label = stringResource(R.string.drawer_menu_home),
+                isSelected = currentRoute == Routes.HOME,
+                onClick = {
+                    closeDrawer()
+                    onHomePressed()
+                }
+            )
+
+            DrawerItemGroupTitle(title = stringResource(R.string.drawer_header_menu_register))
 
             DrawerItem(
                 imageVector = Icons.AutoMirrored.Outlined.Segment,
@@ -119,7 +134,7 @@ private fun DrawerSheet(
                 }
             )
 
-            DrawerItemGroupTitle(title = "Mentor")
+            DrawerItemGroupTitle(title = stringResource(R.string.drawer_header_menu_mentor))
 
             DrawerItem(
                 imageVector = Icons.Default.AutoAwesome,
@@ -131,11 +146,11 @@ private fun DrawerSheet(
                 }
             )
 
-            DrawerItemGroupTitle(title = "Objetivos")
+            DrawerItemGroupTitle(title = stringResource(R.string.drawer_header_menu_goals))
 
             DrawerItem(
                 imageVector = Icons.Default.Flag,
-                label = "Metas",
+                label = stringResource(R.string.drawer_menu_goals),
                 isSelected = currentRoute == Routes.GOAL_LIST,
                 onClick = {
                     closeDrawer()
@@ -190,6 +205,7 @@ private fun DrawerPreview() {
             onTransactionPressed = {},
             onMentorPressed = {},
             onGoalPressed = {},
+            onHomePressed = {},
             onLogout = {}
         )
     }

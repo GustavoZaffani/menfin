@@ -103,7 +103,7 @@ class GoalListViewModel(
             val feedbacks = feedbackDao.findAllByUser(userId)
             val goals = goalDao.findAllByUserId(userId)
 
-            val prompt = promptBuilder.buildInsightsPrompt(
+            val prompt = promptBuilder.buildGoalInsightsPrompt(
                 onboardingData = onboardingData!!,
                 transactions = transactions,
                 feedbacks = feedbacks,

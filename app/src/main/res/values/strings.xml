@@ -12,7 +12,16 @@
     <string name="error_invalid_monetary_min_value">O valor deve ser maior ou igual a R$ 0,01.</string>
 
     <!-- Drawer -->
+    <string name="drawer_menu_home">Início</string>
     <string name="drawer_menu_transaction">Lançamentos</string>
+    <string name="drawer_header_menu_register">Cadastros</string>
+    <string name="drawer_header_menu_mentor">Mentor</string>
+    <string name="drawer_header_menu_goals">Objetivos</string>
+    <string name="drawer_menu_goals">Metas</string>
+
+    <!-- Components -->
+    <string name="month_navigator_previous_month">Mês anterior</string>
+    <string name="month_navigator_next_month">Próximo mês</string>
 
     <!-- Generic -->
     <string name="generic_to_cancel">Cancelar</string>
@@ -108,12 +117,20 @@
     <!-- Goal List -->
     <string name="goal_list_app_bar_title">Metas</string>
     <string name="goal_list_empty_list_message">Nenhuma meta cadastrada.</string>
-    <string name="goal_list_loading_message">Carregando metas...</string>
+    <string name="goal_list_loading_message">Carregando metas</string>
     <string name="goal_list_add_new_goal">Adicionar meta</string>
     <string name="goal_list_insights">Insights</string>
     <string name="goal_list_show_insights">Ver insights</string>
     <string name="goal_list_menfin_insights">Insights do MenFin</string>
     <string name="goal_list_sure_and_close">Entendi, fechar</string>
     <string name="goal_list_insight_type">Tipo de insight</string>
+
+    <!-- Home -->
+    <string name="home_loading_information">Carregando informações</string>
+    <string name="home_balance_month">Saldo do mês</string>
+    <string name="home_revenue">Receitas</string>
+    <string name="home_expenses">Despesas</string>
+    <string name="home_insights">Insights</string>
+    <string name="home_menfin_insights">Insights do MenFin</string>
 
 </resources>

@@ -68,7 +68,7 @@ class GeminiPromptBuilder {
         }
     }
 
-    fun buildInsightsPrompt(
+    fun buildGoalInsightsPrompt(
         onboardingData: OnboardingModel,
         transactions: List<TransactionModel>,
         feedbacks: List<FeedbackModel>,
@@ -109,6 +109,39 @@ class GeminiPromptBuilder {
                 Analise TODOS os dados fornecidos e gere de 3 a 4 insights concisos e úteis para o usuário, seguindo estritamente o formato JSON especificado.
                 Os insights precisam ser direcionados as metas definidas.
                 IMPORTANTE: Quero a resposta em rawText, não quero que venha formatado como markdown ou qualquer outro tipo de formatação.
+                """.trimIndent()
+            )
+        }
+    }
+
+    fun buildInsightsHomePrompt(
+        onboardingData: OnboardingModel,
+        transactions: List<TransactionModel>,
+        feedbacks: List<FeedbackModel>
+    ): String {
+        return buildString {
+            append(
+                """
+                Você é um mentor financeiro amigável e prestativo chamado MenFin.
+                É um especialista em finanças e seu trabalho é analisar os dados de um usuário e gerar insights acionáveis.
+                """.trimIndent()
+            )
+            append(DOUBLE_BREAK)
+            append(getUserContext(onboardingData))
+            append(DOUBLE_BREAK)
+            append(getTransactionsContext(transactions))
+            append(DOUBLE_BREAK)
+            append(getFeedbacksContext(feedbacks))
+            append(DOUBLE_BREAK)
+            append(
+                """
+                --- INSTRUÇÃO FINAL ---
+                Analise TODOS os dados fornecidos e gere de 3 a 4 insights concisos e úteis para o usuário, seguindo estritamente o formato abaixo:
+                - Cada insight deve ser separado por um ponto e vírgula. Com isso conseguirei definir um insight do outro.
+                - Use **negrito** para destacar valores e pontos importantes.
+                Os insights precisam ser direcionados as transações que estou te repassando.
+                IMPORTANTE: Quero a resposta em rawText, além do destaque em negrito, poderá ter apenas o ponto e vírgula para a separação dos insights.
+                OBSERVAÇÃO: As informações que estou te encaminhando se referem a um mês específico, onde o usuário irá ter um panorama do mês escolhido.
                 """.trimIndent()
             )
         }
